@@ -1,0 +1,16 @@
+[
+{
+  "modId": "broken-library",
+  "name": "Broken Library",
+  "description": "This mod is used as a library, just add it to the classpath of your java project when developing your mod. And add it in the mod folder when launching the server.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["BrokenSwing"],
+  "credits": "The Forge and FML guys for their work and MinecraftForgeFrance for their forum.",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
