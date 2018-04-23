@@ -1,46 +1,40 @@
 package brokenlib;
 
-import brokenlib.common.network.BrokenLibNetwork;
-import brokenlib.common.utils.ServerManager;
+import brokenlib.common.notification.DedicatedNotificationManager;
+import brokenlib.common.notification.NotificationManager;
+import brokenlib.common.save.BrokenLibData;
+import brokenlib.common.save.WorldDataWrapper;
 import brokenlib.server.command.CommandBrokenLib;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 
-@Mod(modid = BrokenLib.MODID, version = "Broken Library")
+@Mod(modid = BrokenLib.MODID, name = "Broken Library", version = BrokenLib.VERSION)
 public class BrokenLib {
 
     public static final String MODID = "brokenlib";
     public static final String VERSION = "0.1.0";
 
     public static File configDir = null;
-    public static final Logger LOGGER = LogManager.getLogger(MODID);
+
+    public static final WorldDataWrapper<BrokenLibData> DATA = new WorldDataWrapper(BrokenLibData.class, MODID);
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        configDir = new File(event.getModConfigurationDirectory(), "brokenlib");
-        if(!configDir.exists())
-            if(!configDir.mkdir())
-                LOGGER.fatal("The notifications won't be saved. The directory {} can't be created", configDir.getAbsolutePath());
+        configDir = new File(event.getModConfigurationDirectory(), MODID);
     }
 
     @Mod.EventHandler
-    public void serverStopping(FMLServerStoppingEvent event) {
-        ServerManager.instance().fireServerStopping(event);
-    }
+    public void init(FMLInitializationEvent event) {}
 
     @Mod.EventHandler
     public void serverStarting(FMLServerStartingEvent event) {
         event.registerServerCommand(new CommandBrokenLib());
-    }
-
-    public static BrokenLibNetwork newNetwork(String name) {
-        return new BrokenLibNetwork(name);
+        DATA.serverStarting();
+        NotificationManager.instance().initServerManager();;
     }
 
 }

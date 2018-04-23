@@ -12,9 +12,17 @@ public abstract class NotificationDisplay extends Gui {
      * @param x x position of the slot
      * @param y  y position of the slot
      * @param width the width to fit
-     * @return the height of the displayed GUI
      */
-    public abstract int drawNotification(int mouseX, int mouseY, int x, int y, int width);
+    public abstract void drawNotification(int mouseX, int mouseY, int x, int y, int width);
+
+    public abstract void mouseClicked(int mouseX, int mouseY, int button);
+
+    /**
+     * Indicates the height of the display relatively to the given width.
+     * @param width The width provided to display the notification
+     * @return the height of the display
+     */
+    public abstract int getHeightFromWidth(int width);
 
     public abstract int getNotificationId();
 

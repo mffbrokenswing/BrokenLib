@@ -58,15 +58,7 @@ public class ClientNotificationManager {
 
                 // DISPLAY
 
-                this.displays.clear();
-                this.notifications.entrySet().stream()
-                        .map(entry ->
-                                Pair.of(entry.getValue().getTimestamp().get(),
-                                        entry.getValue().getDisplay(entry.getKey()))
-                        )
-                        .sorted((p1, p2) -> Long.compare(p1.getKey(), p1.getKey()))
-                        .map(Pair::getValue)
-                        .forEachOrdered(this.displays::addLast);
+                updateDisplays();
 
             }
         } catch (Exception e) {
@@ -86,8 +78,22 @@ public class ClientNotificationManager {
     }
 
     public void removeNotification(int id) {
-        if(this.notifications.containsKey(id))
+        if(this.notifications.containsKey(id)) {
             this.notifications.remove(id).onRemove(Side.CLIENT);
+            updateDisplays();
+        }
+    }
+
+    void updateDisplays() {
+        this.displays.clear();
+        this.notifications.entrySet().stream()
+                .map(entry ->
+                        Pair.of(entry.getValue().getTimestamp().get(),
+                                entry.getValue().getDisplay(entry.getKey()))
+                )
+                .sorted((p1, p2) -> Long.compare(p1.getKey(), p1.getKey()))
+                .map(Pair::getValue)
+                .forEachOrdered(this.displays::addLast);
     }
 
 }

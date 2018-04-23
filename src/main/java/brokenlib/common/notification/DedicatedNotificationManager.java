@@ -1,29 +1,23 @@
 package brokenlib.common.notification;
 
-import net.minecraftforge.fml.relauncher.Side;
-
 import java.util.UUID;
 
 public class DedicatedNotificationManager {
 
     private final String modId;
-    private final Side side;
 
-    DedicatedNotificationManager(String modId, Side side) {
+    DedicatedNotificationManager(String modId) {
         this.modId = modId;
-        this.side = side;
     }
 
     /**
-     * Call this to send a notification to the a client.
+     * Call this to send a notification to the client.
      * @param target The UUID of the player
      * @param notification The notification to send
      */
     public void sendNotificationTo(UUID target, Notification notification) {
-        if(side.isServer()) {
             notification.setEmitter(this.modId);
             ServerNotificationManager.instance().addNotification(target, notification);
-        }
     }
 
     /**
@@ -31,9 +25,7 @@ public class DedicatedNotificationManager {
      * @param notificationId The id of the notification to send back to the server
      */
     public void replyToServer(int notificationId) {
-        if(this.side.isClient()) {
-            ClientNotificationManager.instance().sendReplyToServer(notificationId, modId);
-        }
+        ClientNotificationManager.instance().sendReplyToServer(notificationId, modId);
     }
 
 }

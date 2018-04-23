@@ -8,13 +8,13 @@ import java.util.HashMap;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class BrokenLibDatas extends WorldSavedData {
+public class BrokenLibData extends WorldSavedData {
 
     private HashMap<String, Supplier<NBTTagCompound>> suppliers;
     private HashMap<String, Consumer<NBTTagCompound>> consumers;
-    private NBTTagCompound loadedNBT = null;
+    private NBTTagCompound currentNBT = null;
 
-    public BrokenLibDatas(String name) {
+    public BrokenLibData(String name) {
         super(name);
         this.suppliers = new HashMap<>();
         this.consumers = new HashMap<>();
@@ -22,10 +22,10 @@ public class BrokenLibDatas extends WorldSavedData {
 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
-        this.loadedNBT = nbt;
+        this.currentNBT = nbt;
         consumers.forEach((name, consumer) -> {
-            if(this.loadedNBT.hasKey(name, Constants.NBT.TAG_COMPOUND)) {
-                consumer.accept(this.loadedNBT.getCompoundTag(name));
+            if(this.currentNBT.hasKey(name, Constants.NBT.TAG_COMPOUND)) {
+                consumer.accept(this.currentNBT.getCompoundTag(name));
             }
         });
     }
@@ -36,14 +36,15 @@ public class BrokenLibDatas extends WorldSavedData {
         suppliers.forEach((name, supplier) -> {
             nbt.setTag(name, supplier.get());
         });
+        this.currentNBT = nbt;
         return nbt;
     }
 
     public void addSubData(String name, Supplier<NBTTagCompound> supplier, Consumer<NBTTagCompound> consumer) {
         this.suppliers.put(name, supplier);
         this.consumers.put(name, consumer);
-        if(this.loadedNBT != null && this.loadedNBT.hasKey(name, Constants.NBT.TAG_COMPOUND)) {
-            consumer.accept(this.loadedNBT.getCompoundTag(name));
+        if(this.currentNBT != null && this.currentNBT.hasKey(name, Constants.NBT.TAG_COMPOUND)) {
+            consumer.accept(this.currentNBT.getCompoundTag(name));
         }
     }
 

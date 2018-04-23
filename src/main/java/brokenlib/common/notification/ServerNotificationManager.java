@@ -1,5 +1,6 @@
 package brokenlib.common.notification;
 
+import brokenlib.BrokenLib;
 import brokenlib.common.network.BrokenLibNetwork;
 import brokenlib.common.notification.packet.CSPacketNotification;
 import brokenlib.common.notification.packet.SPacketRemoveNotification;
@@ -35,14 +36,13 @@ class ServerNotificationManager {
     private BitSet                               ids;
     private HashMap<Integer, LinkedNotification> notifications;
     private BrokenLibNetwork network;
-    private NotificationsSaver saver;
 
     private ServerNotificationManager() {
         this.ids = new BitSet();
         this.notifications = new HashMap<>();
         this.network = NotificationManager.instance().getNetwork();
-        this.saver = new NotificationsSaver(this);
         MinecraftForge.EVENT_BUS.register(this);
+        BrokenLib.DATA.getData().addSubData("notification_manager", this::saveToNBT, this::loadFromNBT);
     }
 
     /**
@@ -57,7 +57,7 @@ class ServerNotificationManager {
         LinkedNotification linkedNotification = new LinkedNotification(target, notification);
         int id = getNextAvailableId();
         notifications.put(id, linkedNotification);
-        this.saver.markDirty();
+        BrokenLib.DATA.markDirty();
 
         EntityPlayerMP player = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(target);
         if (player != null) {
@@ -85,7 +85,7 @@ class ServerNotificationManager {
             new SPacketRemoveNotification(pck.getNotificationId()).sendUsing(network).to(player);
         }
 
-        this.saver.markDirty();
+        BrokenLib.DATA.markDirty();
     }
 
     /**
@@ -132,7 +132,6 @@ class ServerNotificationManager {
             if (!notification.hasToBeRemoved)
                 this.notifications.put(getNextAvailableId(), notification);
         }
-        this.saver.markDirty();
     }
 
     private int getNextAvailableId() {

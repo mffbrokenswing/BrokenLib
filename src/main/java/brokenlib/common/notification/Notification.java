@@ -138,13 +138,13 @@ public abstract class Notification {
      * on the disk.
      * @param side The side the notification is removed on
      */
-    abstract void onRemove(Side side);
+    public abstract void onRemove(Side side);
 
     /**
      * Called when the notification is received client side. At this state, the notification is already populated with
      * the values the server sent.
      */
-    abstract void receivedOnClient();
+    public abstract void receivedOnClient();
 
     /**
      * Called when the notification is received server side. At this state, the notification is already populated with
@@ -152,6 +152,6 @@ public abstract class Notification {
      * @param playerMp The player the notification were sent to
      * @return true if the notification should be removed
      */
-    abstract boolean receivedOnServer(EntityPlayerMP playerMp);
+    public abstract boolean receivedOnServer(EntityPlayerMP playerMp);
 
 }

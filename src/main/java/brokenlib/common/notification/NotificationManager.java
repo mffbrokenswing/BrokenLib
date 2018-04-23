@@ -6,10 +6,8 @@ import brokenlib.common.notification.packet.CSPacketNotification;
 import brokenlib.common.notification.packet.SPacketRemoveNotification;
 import com.google.common.base.Preconditions;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.LoaderState;
-import net.minecraftforge.fml.relauncher.Side;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
@@ -33,7 +31,7 @@ public class NotificationManager {
     private HashMap<String, WeakReference<DedicatedNotificationManager>> queriedManagers;
 
     private NotificationManager() {
-        notificationNetwork = BrokenLib.newNetwork(BrokenLib.MODID + "_notification_system");
+        notificationNetwork = new BrokenLibNetwork(BrokenLib.MODID + "_notification_system");
         notificationNetwork.registerPacket(CSPacketNotification.class);
         notificationNetwork.registerPacket(SPacketRemoveNotification.class);
 
@@ -61,12 +59,13 @@ public class NotificationManager {
         Preconditions.checkState(!this.queriedManagers.containsKey(modId),
                 "The manager should be queried only once.");
 
-        Side side = FMLCommonHandler.instance().getEffectiveSide();
-        if(side.isServer())
-            ServerNotificationManager.instance(); // Init the manager (loads notifications, etc ...)
-        DedicatedNotificationManager manager =  new DedicatedNotificationManager(modId, side);
+        DedicatedNotificationManager manager =  new DedicatedNotificationManager(modId);
         this.queriedManagers.put(modId, new WeakReference<>(manager));
         return manager;
+    }
+
+    public void initServerManager() {
+        ServerNotificationManager.instance();
     }
 
     /**
