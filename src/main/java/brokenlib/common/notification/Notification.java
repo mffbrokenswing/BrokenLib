@@ -38,8 +38,8 @@ public abstract class Notification {
     }
 
     /**
-     * Add all the parameters to the {@link ArrayList} {@link Notification::parameters} using
-     * {@link Notification::addParameter}.
+     * Add all the parameters to the {@link ArrayList} {@link Notification#parameters} using
+     * {@link Notification#addParameter}.
      */
     protected abstract void addParameters();
 
@@ -100,9 +100,9 @@ public abstract class Notification {
     /**
      * Repopulates parameter's values using the provided {@link NBTTagCompound}.
      * If this method is called client side, only the parameters which returns true to
-     * {@link NotifParameter::shouldBeSent} are repopulated with a value.
+     * {@link NotifParameter#shouldBeSent()} are repopulated with a value.
      * If the method is called server side, only the parameters which returns true to
-     * {@link NotifParameter::canBeOverride} are repopulated with a value.
+     * {@link NotifParameter#canBeOverride()} are repopulated with a value.
      * @param nbt The {@link NBTTagCompound} containing the values for the concerned parameters
      * @param side The side this method is called on
      */
@@ -116,7 +116,7 @@ public abstract class Notification {
 
     /**
      * Saves the notification in order to be able to retrieve the exact same instance when calling
-     * {@link Notification::fromSave}.
+     * {@link Notification#fromSave(NBTTagCompound)}.
      * @return the serialized notification to save on the disk
      */
     NBTTagCompound toSave() {
