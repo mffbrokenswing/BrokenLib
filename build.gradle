@@ -8,9 +8,11 @@ buildscript {
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'maven'
+apply plugin: 'signing'
 
-version = "0.1.0"
-group = "github.mffbrokenswing"
+version = "0.1.0-SNAPSHOT"
+group = "com.github.mffbrokenswing"
 archivesBaseName = "broken-library"
 
 sourceCompatibility = targetCompatibility = '1.8'
@@ -47,3 +49,68 @@ processResources {
         exclude 'mcmod.info'
     }
 }
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+      repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      pom.project {
+        name 'Broken Library'
+        packaging 'jar'
+
+        description 'A library providing development tools for Minecraft modders'
+        url 'https://github.com/MFFbrokenSwing/BrokenLib'
+
+        scm {
+          connection 'scm:git:git://github.com/MFFbrokenSwing/BrokenLib.git'
+          developerConnection 'scm:git:ssh://github.com:MFFbrokenSwing/BrokenLib.git'
+          url 'http://github.com/MFFbrokenSwing/BrokenLib/tree/master'
+        }
+
+        licenses {
+          license {
+            name 'The Apache License, Version 2.0'
+            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+          }
+        }
+
+        developers {
+          developer {
+            id 'mffbrokenswing'
+            name 'Florent HUGOUVIEUX'
+            email 'fhugouvieux@gmail.com'
+          }
+        }
+      }
+    }
+  }
+}
+
+uploadArchives.dependsOn build
