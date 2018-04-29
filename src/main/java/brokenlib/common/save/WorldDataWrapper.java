@@ -1,9 +1,9 @@
 package brokenlib.common.save;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.storage.MapStorage;
 import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -26,14 +26,17 @@ public class WorldDataWrapper<T extends WorldSavedData> {
 
     public void serverStarting() {
         MapStorage storage = DimensionManager.getWorld(0).getMapStorage();
-        this.data = (T)storage.getOrLoadData(clazz, identifier);
-        if(this.data == null) {
-            try {
-                data = clazz.getConstructor(String.class).newInstance(identifier);
-                storage.setData(identifier, data);
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                e.printStackTrace();
-            }
+        data = (T)storage.getOrLoadData(clazz, identifier);
+        if(data == null) {
+            storage.setData(identifier, data);
+        }
+    }
+
+    private void createData() {
+        try {
+            data = clazz.getConstructor(String.class).newInstance(identifier);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace();
         }
     }
 

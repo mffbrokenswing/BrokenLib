@@ -44,7 +44,7 @@ public class ClientNotificationManager {
         this.displays.clear();
     }
 
-    void receivedNotificationPacket(CSPacketNotification pck) {
+    public void receivedNotificationPacket(CSPacketNotification pck) {
         try {
             Class<?> c = Class.forName(pck.getNotificationClass());
             if (Notification.class.isAssignableFrom(c)) {

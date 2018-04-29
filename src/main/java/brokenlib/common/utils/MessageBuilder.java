@@ -1,9 +1,8 @@
 package brokenlib.common.utils;
 
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.text.*;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,9 +26,10 @@ public class MessageBuilder {
                     matcher.appendReplacement(buffer, "");
                 } else {
                     matcher.appendReplacement(buffer, "{" + i + "}");
-                    index = Math.max(i + 1, objects.length - 1);
+                    index = Math.min(i + 1, objects.length - 1);
                 }
             }
+            matcher.appendTail(buffer);
             message = buffer.toString();
         }
 

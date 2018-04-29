@@ -1,8 +1,10 @@
 package brokenlib.common.notification.packet;
 
 import brokenlib.common.network.IPacket;
+import brokenlib.common.notification.ClientNotificationManager;
 import brokenlib.common.notification.Notification;
 import brokenlib.common.notification.NotificationManager;
+import brokenlib.common.notification.ServerNotificationManager;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -43,9 +45,9 @@ public class CSPacketNotification implements IPacket<CSPacketNotification> {
     @Override
     public void handle(MessageContext context) {
         if(context.side.isServer()) {
-            NotificationManager.instance().receivedPacketFromClient(this, context.getServerHandler().player);
+            ServerNotificationManager.instance().receivedNotificationPacket(context.getServerHandler().player, this);
         } else {
-            NotificationManager.instance().receivedPacketFromServer(this);
+            ClientNotificationManager.instance().receivedNotificationPacket(this);
         }
     }
 

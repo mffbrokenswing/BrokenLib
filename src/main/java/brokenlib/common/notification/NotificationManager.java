@@ -64,18 +64,4 @@ public class NotificationManager {
         return manager;
     }
 
-    // DON'T CALL FOLLOWING METHODS //
-
-    public void initServerManager() {
-        ServerNotificationManager.instance();
-    }
-
-    public void receivedPacketFromClient(CSPacketNotification pck, EntityPlayerMP player) {
-        ServerNotificationManager.instance().receivedNotificationPacket(player, pck);
-    }
-
-    public void receivedPacketFromServer(CSPacketNotification pck)  {
-        ClientNotificationManager.instance().receivedNotificationPacket(pck);
-    }
-
 }

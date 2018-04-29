@@ -4,7 +4,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.UUID;
 
-class LinkedNotification {
+public class LinkedNotification {
 
     UUID target;
     Notification notification;
@@ -39,4 +39,11 @@ class LinkedNotification {
         return nbt;
     }
 
+    public UUID getTarget() {
+        return target;
+    }
+
+    public Notification getNotification() {
+        return notification;
+    }
 }

@@ -15,15 +15,13 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
-import java.util.BitSet;
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
 
-class ServerNotificationManager {
+public class ServerNotificationManager {
 
     private static volatile ServerNotificationManager instance = null;
 
-    static ServerNotificationManager instance() {
+    public static ServerNotificationManager instance() {
         if (instance == null) {
             synchronized (ServerNotificationManager.class) {
                 if (instance == null)
@@ -42,7 +40,10 @@ class ServerNotificationManager {
         this.notifications = new HashMap<>();
         this.network = NotificationManager.instance().getNetwork();
         MinecraftForge.EVENT_BUS.register(this);
-        BrokenLib.DATA.getData().addSubData("notification_manager", this::saveToNBT, this::loadFromNBT);
+    }
+
+    public void initSaver() {
+        BrokenLib.proxy.getDataWrapper().getData().addSubData("notification_manager", this::saveToNBT, this::loadFromNBT);
     }
 
     /**
@@ -57,7 +58,7 @@ class ServerNotificationManager {
         LinkedNotification linkedNotification = new LinkedNotification(target, notification);
         int id = getNextAvailableId();
         notifications.put(id, linkedNotification);
-        BrokenLib.DATA.markDirty();
+        BrokenLib.proxy.getDataWrapper().markDirty();
 
         EntityPlayerMP player = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(target);
         if (player != null) {
@@ -85,7 +86,7 @@ class ServerNotificationManager {
             new SPacketRemoveNotification(pck.getNotificationId()).sendUsing(network).to(player);
         }
 
-        BrokenLib.DATA.markDirty();
+        BrokenLib.proxy.getDataWrapper().markDirty();
     }
 
     /**
@@ -142,6 +143,10 @@ class ServerNotificationManager {
 
     private void freeId(int id) {
         ids.clear(id);
+    }
+
+    public Map<Integer, LinkedNotification> getNotifications() {
+        return Collections.unmodifiableMap(this.notifications);
     }
 
 }

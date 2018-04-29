@@ -1,31 +1,20 @@
 package brokenlib.client.notification;
 
-import brokenlib.BrokenLib;
 import brokenlib.client.render.utils.RenderUtils;
 import brokenlib.common.notification.ClientNotificationManager;
-import ca.weblite.objc.Client;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.inventory.GuiInventory;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraftforge.client.event.GuiOpenEvent;
-import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
-
-import java.io.IOException;
 
 public class NotificationWindow extends Gui {
 
-    private static final int SCROLL_BAR_WIDTH = 5;
+    public static final int SCROLL_BAR_WIDTH = 5;
 
     private int width, height;
     private int drawableWidth;
     private int x, y;
+
+    private int scrollBarColor;
 
     private int yOffset;
     private int scrollBarHeight, scrollBarY;
@@ -42,6 +31,11 @@ public class NotificationWindow extends Gui {
         this.scrollBarHeight = this.scrollBarY = 0;
         this.clickedY = -1;
         this.preparedOffset = 0;
+        this.scrollBarColor = 0xFFFFFFFF;
+    }
+
+    public void setScrollBarColor(int color) {
+        this.scrollBarColor = color;
     }
 
     public void setPosition(int x, int y) {
@@ -102,13 +96,19 @@ public class NotificationWindow extends Gui {
         } else if (-yOffset + totalHeight < height) {
             yOffset = totalHeight - height;
         }
-
         int yDisplay = y - (yOffset + preparedOffset);
         for (NotificationDisplay display : ClientNotificationManager.instance().getDisplays()) {
             int displayHeight = display.getHeightFromWidth(drawableWidth);
             if ((yDisplay < y + this.height && yDisplay > y) || // is notification's upper bound visible
                     (yDisplay + displayHeight > y && yDisplay + displayHeight < y + height)) { // lower bound
-                display.drawNotification(mouseX, mouseY, x, yDisplay, drawableWidth);
+                boolean hovered =
+                        mouseX >= this.x &&
+                        mouseX < this.x + this.width - SCROLL_BAR_WIDTH &&
+                        mouseY >= this.y &&
+                        mouseY < this.y + this.height &&
+                        mouseY >= yDisplay &&
+                        mouseY < yDisplay + displayHeight;
+                display.drawNotification(mouseX - this.x, mouseY - yDisplay, x, yDisplay, drawableWidth, hovered);
             }
             yDisplay += displayHeight;
         }
@@ -119,7 +119,7 @@ public class NotificationWindow extends Gui {
             scrollBarHeight = (int) (this.height * 1.0 / totalHeight * this.height);
             scrollBarY = this.y + (int) ((this.yOffset + preparedOffset) * 1.0 / totalHeight * this.height);
 
-            Gui.drawRect(this.x + this.drawableWidth, scrollBarY, this.x + this.width, scrollBarY + scrollBarHeight, 0xFFFFFFFF);
+            Gui.drawRect(this.x + this.drawableWidth, scrollBarY, this.x + this.width, scrollBarY + scrollBarHeight, this.scrollBarColor);
         }
     }
 
