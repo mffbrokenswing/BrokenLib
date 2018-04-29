@@ -65,6 +65,7 @@ artifacts {
 }
 
 signing {
+    required { !System.env.CI }
     sign configurations.archives
 }
 
