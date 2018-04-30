@@ -1,20 +1,23 @@
 language: java
 before_install:
-  - chmod +x gradlew
+- openssl aes-256-cbc -K $encrypted_c407a78e8c23_key -iv $encrypted_c407a78e8c23_iv
+  -in key.pgp.enc -out key.pgp -d
+- chmod +x gradlew
 install:
-  - ./gradlew setupCIWorkspace -S
+- "./gradlew setupCIWorkspace -S"
 script:
-  - ./gradlew build -S
+- "./gradlew build -S"
 before_cache:
-  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -f $HOME/.gradle/caches/minecraft/ForgeVersion.json
-  - rm -f $HOME/.gradle/caches/minecraft/ForgeVersion.json.etag
-  - rm -rf $HOME/.gradle/caches/minecraft/deobfedDeps
+- rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -f $HOME/.gradle/caches/minecraft/ForgeVersion.json
+- rm -f $HOME/.gradle/caches/minecraft/ForgeVersion.json.etag
+- rm -rf $HOME/.gradle/caches/minecraft/deobfedDeps
+- rm -f ./key.pgp
 cache:
-  - directories:
-    - ./libs
-    - $HOME/.gradle/caches
-    - $HOME/.gradle/wrapper
+- directories:
+  - "./libs"
+  - "$HOME/.gradle/caches"
+  - "$HOME/.gradle/wrapper"
 global_env: TERM=dumb
 group: stable
 dist: precise
