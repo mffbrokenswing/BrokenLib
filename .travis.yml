@@ -1,5 +1,6 @@
 language: java
 before_install:
+- openssl aes-256-cbc -K $encrypted_31b8ef977da9_key -iv $encrypted_31b8ef977da9_iv
 - chmod +x gradlew
 install:
 - "./gradlew setupCIWorkspace -S"

@@ -31,6 +31,11 @@ dependencies {
 
 }
 
+allprojects {
+  ext."signing.keyId" = System.env.SIGNING_KEY_ID
+  ext."signing.password" = System.env.SIGNING_PASSWORD
+}
+
 processResources {
     // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
@@ -65,8 +70,6 @@ artifacts {
 }
 
 signing {
-    keyId = System.env.SIGNING_KEY_ID
-    password = System.env.SIGNING_PASSWORD
     required { !System.env.CI }
     sign configurations.archives
 }
