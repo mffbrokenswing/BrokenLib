@@ -62,7 +62,7 @@ artifacts {
 }
 
 signing {
-    required { project.version != System.env.LAST_BUILD_VERSION }
+    required { System.env.CI }
     sign configurations.archives
 }
 
@@ -109,7 +109,6 @@ uploadArchives {
       }
     }
   }
-  environment "LAST_BUILD_VERSION", project.version
 }
 
 uploadArchives.dependsOn build
