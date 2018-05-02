@@ -5,7 +5,7 @@ before_install:
 install:
 - "./gradlew setupCIWorkspace -S"
 script:
-- "./gradlew build -S"
+- "./gradlew uploadArchives -S"
 before_cache:
 - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
 - rm -f $HOME/.gradle/caches/minecraft/ForgeVersion.json
