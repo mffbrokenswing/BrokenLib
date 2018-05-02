@@ -27,3 +27,4 @@ deploy:
   script: ./gradlew uploadArchives
   on:
     branch: master
+  skip_cleanup: true
