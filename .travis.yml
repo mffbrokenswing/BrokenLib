@@ -26,4 +26,4 @@ deploy:
   provider: script
   script: ./gradlew uploadArchives
   on:
-    branch: develop
+    branch: master
