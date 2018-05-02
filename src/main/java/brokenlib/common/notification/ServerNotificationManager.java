@@ -4,6 +4,7 @@ import brokenlib.BrokenLib;
 import brokenlib.common.network.BrokenLibNetwork;
 import brokenlib.common.notification.packet.CSPacketNotification;
 import brokenlib.common.notification.packet.SPacketRemoveNotification;
+import io.netty.util.collection.IntObjectHashMap;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -15,7 +16,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
-import java.util.*;
+import java.util.BitSet;
+import java.util.Collections;
+import java.util.Map;
+import java.util.UUID;
 
 public class ServerNotificationManager {
 
@@ -32,12 +36,12 @@ public class ServerNotificationManager {
     }
 
     private BitSet                               ids;
-    private HashMap<Integer, LinkedNotification> notifications;
+    private IntObjectHashMap<LinkedNotification> notifications;
     private BrokenLibNetwork network;
 
     private ServerNotificationManager() {
         this.ids = new BitSet();
-        this.notifications = new HashMap<>();
+        this.notifications = new IntObjectHashMap<>();
         this.network = NotificationManager.instance().getNetwork();
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -87,6 +91,17 @@ public class ServerNotificationManager {
         }
 
         BrokenLib.proxy.getDataWrapper().markDirty();
+    }
+
+    public boolean removeNotification(int id) {
+        LinkedNotification notification = this.notifications.remove(id);
+        if(notification == null)
+            return false;
+        freeId(id);
+        EntityPlayerMP player = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(notification.target);
+        if(player != null)
+            new SPacketRemoveNotification(id).sendUsing(this.network).to(player);
+        return true;
     }
 
     /**

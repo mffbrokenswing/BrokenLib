@@ -3,13 +3,13 @@ package brokenlib.common.notification;
 import brokenlib.client.notification.NotificationDisplay;
 import brokenlib.common.network.BrokenLibNetwork;
 import brokenlib.common.notification.packet.CSPacketNotification;
+import io.netty.util.collection.IntObjectHashMap;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 
 public class ClientNotificationManager {
@@ -26,12 +26,12 @@ public class ClientNotificationManager {
         return instance;
     }
 
-    private HashMap<Integer, Notification> notifications;
+    private IntObjectHashMap<Notification> notifications;
     private LinkedList<NotificationDisplay> displays;
     private final BrokenLibNetwork network;
 
     private ClientNotificationManager() {
-        this.notifications = new HashMap<>();
+        this.notifications = new IntObjectHashMap<>();
         this.network = NotificationManager.instance().getNetwork();
         this.displays = new LinkedList<>();
 

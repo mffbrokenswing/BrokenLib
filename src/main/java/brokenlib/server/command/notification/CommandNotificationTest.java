@@ -6,10 +6,17 @@ import brokenlib.common.permissions.BrokenLibPerms;
 import brokenlib.common.utils.MessageBuilder;
 import brokenlib.server.command.CommandPermissionBased;
 import net.minecraft.command.CommandException;
+import net.minecraft.command.CommandTP;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
+
+import javax.annotation.Nullable;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class CommandNotificationTest extends CommandPermissionBased {
 
@@ -25,18 +32,35 @@ public class CommandNotificationTest extends CommandPermissionBased {
 
     @Override
     public String getUsage(ICommandSender sender) {
-        return "command.notification.test";
+        return "command.notification.test.usage";
     }
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-        if(args.length < 1)
-            throw new WrongUsageException(getUsage(sender));
+        Set<EntityPlayer> targets = new HashSet<>();
+        if(args.length == 0) {
+            targets.add(getCommandSenderAsPlayer(sender));
+        } else {
+            for(int i = 0; i < args.length; i++) {
+                targets.add(getPlayer(server, sender, args[i]));
+            }
+        }
 
-        EntityPlayer player = getPlayer(server, sender, args[0]);
-        NotificationTest n = new NotificationTest();
-        n.setTester(getCommandSenderAsPlayer(sender).getUniqueID());
-        BrokenLib.proxy.getNotificationManager().sendNotificationTo(player.getUniqueID(), n);
-        sender.sendMessage(MessageBuilder.build("${green}A test notification was sent to ${aqua}{}", player.getName()));
+        for (EntityPlayer target : targets) {
+            NotificationTest n = new NotificationTest();
+            n.setTester(getCommandSenderAsPlayer(sender).getUniqueID());
+            BrokenLib.proxy.getNotificationManager().sendNotificationTo(target.getUniqueID(), n);
+            sender.sendMessage(MessageBuilder.build("${green}A test notification was sent to ${aqua}{}", target.getName()));
+        }
+    }
+
+    @Override
+    public boolean isUsernameIndex(String[] args, int index) {
+        return true;
+    }
+
+    @Override
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
+        return getListOfStringsMatchingLastWord(args, server.getOnlinePlayerNames());
     }
 }

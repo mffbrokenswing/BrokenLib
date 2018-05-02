@@ -12,6 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -35,6 +36,7 @@ public class NotificationTest extends Notification {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     protected NotificationDisplay createDisplay(int id) {
         return new TestNotificationDisplay(id);
     }

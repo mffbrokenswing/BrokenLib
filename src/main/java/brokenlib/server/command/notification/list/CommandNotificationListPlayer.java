@@ -24,7 +24,7 @@ public class CommandNotificationListPlayer extends CommandPermissionBased {
 
     @Override
     public String getUsage(ICommandSender sender) {
-        return "command.notification.list.player";
+        return "command.notification.list.player.usage";
     }
 
     @Override

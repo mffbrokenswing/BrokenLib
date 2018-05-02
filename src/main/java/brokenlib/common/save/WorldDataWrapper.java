@@ -28,6 +28,7 @@ public class WorldDataWrapper<T extends WorldSavedData> {
         MapStorage storage = DimensionManager.getWorld(0).getMapStorage();
         data = (T)storage.getOrLoadData(clazz, identifier);
         if(data == null) {
+            createData();
             storage.setData(identifier, data);
         }
     }

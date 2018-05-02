@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
-@Mod(modid = BrokenLib.MODID, name = "Broken Library", version = BrokenLib.VERSION)
+@Mod(modid = BrokenLib.MODID, name = "Broken Library", useMetadata = true)
 public class BrokenLib {
 
     public static final String MODID = "brokenlib";

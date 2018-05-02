@@ -1,8 +1,8 @@
 [
 {
-  "modId": "broken-library",
+  "modid": "brokenlib",
   "name": "Broken Library",
-  "description": "This mod is used as a library, just add it to the classpath of your java project when developing your mod. And add it in the mod folder when launching the server.",
+  "description": "A library mod to help developers to create their mods.",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",

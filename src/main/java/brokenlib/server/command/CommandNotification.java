@@ -1,6 +1,7 @@
 package brokenlib.server.command;
 
 import brokenlib.server.command.notification.CommandNotificationList;
+import brokenlib.server.command.notification.CommandNotificationRemove;
 import brokenlib.server.command.notification.CommandNotificationTest;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -13,6 +14,7 @@ public class CommandNotification extends CommandTreeBase {
     public CommandNotification() {
         this.addSubcommand(new CommandNotificationList());
         this.addSubcommand(new CommandNotificationTest());
+        this.addSubcommand(new CommandNotificationRemove());
     }
 
     @Override

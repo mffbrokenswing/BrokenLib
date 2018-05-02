@@ -1,0 +1,5 @@
+command.notification.test.usage=test [players ...]
+command.notification.remove.usage=remove <id>
+command.brokenlib.usage=brokenlib <notification | version>
+command.notification.list.player.usage=player <player>
+command.notification.list.mod.usage=mod <mod id>

@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagLong;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -25,7 +26,7 @@ public abstract class Notification {
     private final NotifParameter<Long, NBTTagLong> timestamp;
     private final NotifParameter<String, NBTTagString> emitter;
     @SideOnly(Side.CLIENT)
-    private NotificationDisplay cachedDisplay = null;
+    private NotificationDisplay cachedDisplay;
 
     public Notification() {
         this.parameters = new ArrayList<>();
@@ -54,6 +55,7 @@ public abstract class Notification {
     @SideOnly(Side.CLIENT)
     protected abstract NotificationDisplay createDisplay(int id);
 
+    @SideOnly(Side.CLIENT)
     public NotificationDisplay getDisplay(int id) {
         if(this.cachedDisplay == null)
             this.cachedDisplay = createDisplay(id);

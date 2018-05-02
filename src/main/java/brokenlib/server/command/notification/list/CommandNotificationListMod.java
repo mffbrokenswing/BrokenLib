@@ -23,7 +23,7 @@ public class CommandNotificationListMod extends CommandPermissionBased {
 
     @Override
     public String getUsage(ICommandSender sender) {
-        return "command.notification.list.mod";
+        return "command.notification.list.mod.usage";
     }
 
     @Override

@@ -11,7 +11,8 @@ public enum BrokenLibPerms {
     VERSION("command.version", "Displays BrokenLib's version", DefaultPermissionLevel.ALL),
     NOTIFICATION_LIST_MOD("command.notification.list.mod", "Shows all the notifications sent by a mod.", DefaultPermissionLevel.OP),
     NOTIFICATION_LIST_PLAYER("command.notification.list.player", "Shows all the notifications sent to a player", DefaultPermissionLevel.OP),
-    NOTIFICATION_TEST("command.notification.test", "Sends a notification to a player", DefaultPermissionLevel.OP);
+    NOTIFICATION_TEST("command.notification.test", "Sends a notification to a player", DefaultPermissionLevel.OP),
+    NOTIFICATION_REMOVE("command.notification.remove", "Removes the notification with the specified id", DefaultPermissionLevel.OP);
 
     private String node, description;
     private DefaultPermissionLevel level;

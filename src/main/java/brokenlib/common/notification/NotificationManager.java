@@ -31,7 +31,7 @@ public class NotificationManager {
     private HashMap<String, WeakReference<DedicatedNotificationManager>> queriedManagers;
 
     private NotificationManager() {
-        notificationNetwork = new BrokenLibNetwork(BrokenLib.MODID + "_notification_system");
+        notificationNetwork = new BrokenLibNetwork(BrokenLib.MODID + "_notif_sys");
         notificationNetwork.registerPacket(CSPacketNotification.class);
         notificationNetwork.registerPacket(SPacketRemoveNotification.class);
 
