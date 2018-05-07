@@ -11,7 +11,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'maven'
 apply plugin: 'signing'
 
-version = "1.0.0"
+version = "0.3.0-SNAPSHOT"
 group = "com.github.mffbrokenswing"
 archivesBaseName = "broken-library"
 
@@ -25,10 +25,6 @@ minecraft {
     runDir = "run"
     mappings = "snapshot_20171003"
     makeObfSourceJar = false
-}
-
-dependencies {
-
 }
 
 allprojects {
