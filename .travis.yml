@@ -1,6 +1,5 @@
 language: java
 before_install:
-- openssl aes-256-cbc -K $encrypted_31b8ef977da9_key -iv $encrypted_31b8ef977da9_iv -in key.pgp.enc -out key.pgp -d
 - chmod +x gradlew
 install:
 - "./gradlew setupCIWorkspace -S"
@@ -23,7 +22,7 @@ jdk: oraclejdk8
 os: linux
 deploy:
   provider: script
-  script: ./gradlew uploadArchives
+  script: ./gradlew bintrayUpload
   on:
     branch: master
   skip_cleanup: true

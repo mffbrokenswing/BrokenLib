@@ -5,13 +5,17 @@ buildscript {
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
     }
 }
+
+apply plugin: 'java'
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'maven'
-apply plugin: 'signing'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
 
-version = "0.3.0-SNAPSHOT"
+version = "1.0.0"
 group = "com.github.mffbrokenswing"
 archivesBaseName = "broken-library"
 
@@ -25,11 +29,6 @@ minecraft {
     runDir = "run"
     mappings = "snapshot_20171003"
     makeObfSourceJar = false
-}
-
-allprojects {
-  ext."signing.keyId" = System.env.SIGNING_KEY_ID
-  ext."signing.password" = System.env.SIGNING_PASSWORD
 }
 
 processResources {
@@ -57,54 +56,64 @@ artifacts {
     archives javadocJar, sourcesJar
 }
 
-signing {
-    required { System.env.CI }
-    sign configurations.archives
-}
+def pomConfig = {
+    name 'Broken Library'
+    packaging 'jar'
 
-uploadArchives {
-  repositories {
-    mavenDeployer {
-      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+    description 'A library providing development tools for Minecraft modders'
+    url 'https://github.com/MFFbrokenSwing/BrokenLib'
 
-      repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-        authentication(userName: System.env.OSSRH_USERNAME, password: System.env.OSSRH_PASSWORD)
-      }
+    scm {
+        connection 'scm:git:git://github.com/MFFbrokenSwing/BrokenLib.git'
+        developerConnection 'scm:git:ssh://github.com:MFFbrokenSwing/BrokenLib.git'
+        url 'http://github.com/MFFbrokenSwing/BrokenLib/tree/master'
+    }
 
-      snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-        authentication(userName: System.env.OSSRH_USERNAME, password: System.env.OSSRH_PASSWORD)
-      }
-
-      pom.project {
-        name 'Broken Library'
-        packaging 'jar'
-
-        description 'A library providing development tools for Minecraft modders'
-        url 'https://github.com/MFFbrokenSwing/BrokenLib'
-
-        scm {
-          connection 'scm:git:git://github.com/MFFbrokenSwing/BrokenLib.git'
-          developerConnection 'scm:git:ssh://github.com:MFFbrokenSwing/BrokenLib.git'
-          url 'http://github.com/MFFbrokenSwing/BrokenLib/tree/master'
-        }
-
-        licenses {
-          license {
+    licenses {
+        license {
             name 'The Apache License, Version 2.0'
             url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-          }
         }
+    }
 
-        developers {
-          developer {
+    developers {
+        developer {
             id 'mffbrokenswing'
             name 'Florent HUGOUVIEUX'
             email 'fhugouvieux@gmail.com'
-          }
         }
-      }
     }
-  }
 }
 
-uploadArchives.dependsOn build
+publishing {
+    publications {
+        Publish(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+            groupId 'com.github.mffbrokenswing'
+            artifactId 'broken-library'
+            version project.version
+            pom.withXml {
+                def root = asNode()
+                root.children().last() + pomConfig
+            }
+        }
+    }
+}
+
+bintray {
+    user = System.env.BINTRAY_USER
+    key = System.env.BINTRAY_KEY
+    publications  = ['Publish']
+    pkg {
+        repo = 'broken-library'
+        name = 'broken-library'
+        version {
+            name = project.version
+            desc = 'Library mod for Minecraft modders'
+            released = new Date()
+            vcsTag = project.version
+        }
+    }
+}
