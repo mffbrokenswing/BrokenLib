@@ -1,7 +1,5 @@
 package brokenlib.common.network;
 
-import brokenlib.BrokenLib;
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -33,10 +31,8 @@ public interface IPacket<P extends IPacket<P>> extends IMessage, IMessageHandler
     default IMessage onMessage(P message, MessageContext ctx) {
         if(!this.executeOnMainThread(ctx.side))
             message.handle(ctx);
-        else if(ctx.side.isClient()) {
-            Minecraft.getMinecraft().addScheduledTask(() -> message.handle(ctx));
-        } else {
-            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> message.handle(ctx));
+        else {
+            FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> message.handle(ctx));
         }
         return null;
     }

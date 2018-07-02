@@ -33,8 +33,7 @@ public abstract class NotifParameter<A, B extends NBTBase> {
     }
 
     public void writeToNBT(NBTTagCompound nbt) {
-        if (this.value.isPresent())
-            nbt.setTag(name, serializer.apply(this.value.get()));
+        this.value.ifPresent(v -> nbt.setTag(name, serializer.apply(v)));
     }
 
     @SuppressWarnings("unchecked")
