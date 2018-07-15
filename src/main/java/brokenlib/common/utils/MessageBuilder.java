@@ -50,7 +50,7 @@ public class MessageBuilder {
                     objMatcher.appendReplacement(buffer, replacement);
                 } catch (IllegalArgumentException e) {
                     e.printStackTrace();
-                    return MessageBuilder.build("${dark_red}Error when building message. Please contact mod author.");
+                    return MessageBuilder.build("${darkred}Error when building message. Please contact mod author.");
                 }
             }
             objMatcher.appendTail(buffer);
